@@ -102,21 +102,22 @@ const select = async () => {
 const toText = (data) => {
   let result = "";
 
-  result += "<b>Ежедневная статистика:</b>\n\n";
+  result += "<b>Ежедневная статистика:</b>\n";
 
-  result += "<b>Онбордингов закончено</b>\n";
+  result += "\n<b>Онбордингов закончено</b>\n";
 
   data.dailyOnboardingFinished.forEach((row) => {
     result += `${row.date}: ${row.cnt}\n`;
   });
 
-  result += "<b>Присоединилось к комнатам</b>\n";
+  result += "\n<b>Присоединилось к комнатам</b>\n";
 
   data.dailyOnboardingFinished.forEach((row) => {
+    console.log(row);
     result += `${row.date} (${row.method}): ${row.cnt}\n`;
   });
 
-  result += "<b>Игр с победителем</b>\n";
+  result += "\n<b>Игр с победителем</b>\n";
 
   data.dailyGamesFinishedWithWinner.forEach((row) => {
     result += `${row.date}: ${row.cnt}\n`;
