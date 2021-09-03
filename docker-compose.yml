@@ -1,0 +1,16 @@
+version: "3.6"
+
+networks:
+  default:
+    external:
+      name: network
+
+services:
+  tg-satlog-bot:
+    container_name: tg-satlog-bot
+    build:
+      context: .
+      dockerfile: ./build/nodejs/Dockerfile
+    restart: "always"
+    image: registry.gitlab.com/aliasgame/tg-satlog-bot:node_14
+    env_file: ./build/.env.list

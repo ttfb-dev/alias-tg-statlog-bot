@@ -1,0 +1,19 @@
+stages:
+  - production
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build_images:
+  image: docker/compose:latest
+  stage: production
+  only:
+    - master
+  script:
+    - export CLICKHOUSE_DB=$CI_PROD_CLICKHOUSE_DB
+    - export CLICKHOUSE_USER=$CI_PROD_CLICKHOUSE_USER
+    - export CLICKHOUSE_PASSWORD=$CI_PROD_CLICKHOUSE_PASSWORD
+    - ./build/run-build
+    - ./build/run
+  tags:
+    - production

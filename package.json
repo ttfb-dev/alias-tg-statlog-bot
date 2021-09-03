@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "name": "tg-statlog-bot",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "git@gitlab.com:aliasgame/tg-statlog-bot.git",
+  "author": "Dmitry Bobrov <bobrov@ttfb.dev>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "clickhouse": "^2.4.1",
+    "node-telegram-bot-api": "^0.54.0"
+  }
+}
