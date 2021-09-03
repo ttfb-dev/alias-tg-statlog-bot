@@ -5,7 +5,7 @@ export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)
 
 export COMPOSE_FILE=docker-compose.yml
-export COMPOSE_PROJECT_NAME=tg-satlog-bot
+export COMPOSE_PROJECT_NAME=tg-statlog-bot
 
 docker-compose build
 docker-compose push

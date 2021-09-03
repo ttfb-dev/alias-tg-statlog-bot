@@ -6,5 +6,5 @@ networks:
       name: ttfb
 
 services:
-  tg-satlog-bot:
+  tg-statlog-bot:
     restart: "no"

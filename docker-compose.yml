@@ -6,11 +6,11 @@ networks:
       name: network
 
 services:
-  tg-satlog-bot:
-    container_name: tg-satlog-bot
+  tg-statlog-bot:
+    container_name: tg-statlog-bot
     build:
       context: .
       dockerfile: ./build/nodejs/Dockerfile
     restart: "always"
-    image: registry.gitlab.com/aliasgame/tg-satlog-bot:node_14
+    image: registry.gitlab.com/aliasgame/tg-statlog-bot:node_14
     env_file: ./build/.env.list

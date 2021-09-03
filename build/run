@@ -7,7 +7,7 @@ export GROUP_ID=$(id -g)
 export $(cat ./build/.env.base)
 
 export COMPOSE_FILE=docker-compose.yml
-export COMPOSE_PROJECT_NAME=tg-satlog-bot
+export COMPOSE_PROJECT_NAME=tg-statlog-bot
 
 docker-compose pull
 
