@@ -35,6 +35,8 @@ bot.on("message", async (msg) => {
 
 const getResponse = async (message) => {
   switch (message) {
+    case "/start":
+      return `Hi!`;
     case "/statistic":
       return await analytics.get();
     default:
