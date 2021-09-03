@@ -112,8 +112,7 @@ const toText = (data) => {
 
   result += "\n<b>Присоединилось к комнатам</b>\n";
 
-  data.dailyOnboardingFinished.forEach((row) => {
-    console.log(row);
+  data.dailyRoomJoined.forEach((row) => {
     result += `${row.date} (${row.method}): ${row.cnt}\n`;
   });
 
