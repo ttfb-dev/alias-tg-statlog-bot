@@ -43,6 +43,31 @@ const dailyGamesFinishedWithWinnerQuery = `
   LIMIT 7
 `;
 
+const dailyOnboardingFinishedQuery = `
+  SELECT 
+    toDate(created_at) as date, 
+    count(*) as cnt
+  FROM analytics
+  WHERE 
+    event = 'profile.finish_onboarding'
+  GROUP BY date 
+  ORDER BY date DESC 
+  LIMIT 7
+`;
+
+const dailyRoomJoinedQuery = `
+  SELECT 
+    toDate(created_at) as date,
+    JSONExtractString(payload, 'join_method') as method,
+    count(*) as cnt
+  FROM analytics
+  WHERE 
+    event = 'room.join'
+  GROUP BY date, method
+  ORDER BY date DESC 
+  LIMIT 21
+`;
+
 const statistic = {
   get: async () => {
     return toText(await select());
@@ -57,17 +82,20 @@ const select = async () => {
     const dailyGamesFinishedWithWinner = await clickhouse
       .query(dailyGamesFinishedWithWinnerQuery)
       .toPromise();
+    const dailyOnboardingFinished = await clickhouse
+      .query(dailyOnboardingFinishedQuery)
+      .toPromise();
+    const dailyRoomJoined = await clickhouse
+      .query(dailyRoomJoinedQuery)
+      .toPromise();
     return {
       dailyGamesStart,
       dailyGamesFinishedWithWinner,
+      dailyOnboardingFinished,
+      dailyRoomJoined,
     };
   } catch ({ message }) {
-    console.error(
-      "analytics select failed",
-      message,
-      dailyGamesStartQuery,
-      dailyGamesFinishedWithWinnerQuery
-    );
+    console.error("analytics select failed", message);
   }
 };
 
@@ -75,6 +103,18 @@ const toText = (data) => {
   let result = "";
 
   result += "<b>Ежедневная статистика:</b>\n\n";
+
+  result += "<b>Онбордингов закончено</b>\n";
+
+  data.dailyOnboardingFinished.forEach((row) => {
+    result += `${row.date}: ${row.cnt}\n`;
+  });
+
+  result += "<b>Присоединилось к комнатам</b>\n";
+
+  data.dailyOnboardingFinished.forEach((row) => {
+    result += `${row.date} (${row.method}): ${row.cnt}\n`;
+  });
 
   result += "<b>Игр с победителем</b>\n";
 
