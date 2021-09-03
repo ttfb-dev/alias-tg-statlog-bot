@@ -62,7 +62,12 @@ const select = async () => {
       dailyGamesFinishedWithWinner,
     };
   } catch ({ message }) {
-    console.error("analytics select failed", message, selectQuery);
+    console.error(
+      "analytics select failed",
+      message,
+      dailyGamesStartQuery,
+      dailyGamesFinishedWithWinnerQuery
+    );
   }
 };
 
