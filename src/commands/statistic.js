@@ -68,6 +68,17 @@ const dailyRoomJoinedQuery = `
   LIMIT 21
 `;
 
+const dailyRoomCreatedQuery = `
+  SELECT 
+    toDate(created_at) as date, 
+    count(*) as cnt 
+  FROM analytics
+  WHERE event = 'room.create' 
+  GROUP BY date 
+  ORDER BY date DESC 
+  LIMIT 7
+`;
+
 const statistic = {
   get: async () => {
     return toText(await select());
@@ -88,11 +99,15 @@ const select = async () => {
     const dailyRoomJoined = await clickhouse
       .query(dailyRoomJoinedQuery)
       .toPromise();
+    const dailyRoomCreated = await clickhouse
+      .query(dailyRoomCreatedQuery)
+      .toPromise();
     return {
       dailyGamesStart,
       dailyGamesFinishedWithWinner,
       dailyOnboardingFinished,
       dailyRoomJoined,
+      dailyRoomCreated,
     };
   } catch ({ message }) {
     console.error("analytics select failed", message);
@@ -125,6 +140,12 @@ const toText = (data) => {
   result += "\n<b>Игр начато</b>\n";
 
   data.dailyGamesStart.forEach((row) => {
+    result += `${row.date}: ${row.cnt}\n`;
+  });
+
+  result += "\n<b>Комнат создано</b>\n";
+
+  data.dailyRoomCreated.forEach((row) => {
     result += `${row.date}: ${row.cnt}\n`;
   });
 
