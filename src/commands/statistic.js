@@ -149,16 +149,16 @@ const toText = (data) => {
     result += `${row.date}: ${row.cnt}\n`;
   });
 
+  result += "\n<b>Комнат создано</b>\n";
+
+  data.dailyRoomCreated.forEach((row) => {
+    result += `${row.date}: ${row.cnt}\n`;
+  });
+
   result += "\n<b>Присоединилось к комнатам</b>\n";
 
   data.dailyRoomJoined.forEach((row) => {
     result += `${row.date} (${row.method}): ${row.cnt}\n`;
-  });
-
-  result += "\n<b>Игр с победителем</b>\n";
-
-  data.dailyGamesFinishedWithWinner.forEach((row) => {
-    result += `${row.date}: ${row.cnt}\n`;
   });
 
   result += "\n<b>Игр начато</b>\n";
@@ -167,9 +167,9 @@ const toText = (data) => {
     result += `${row.date}: ${row.cnt}\n`;
   });
 
-  result += "\n<b>Комнат создано</b>\n";
+  result += "\n<b>Игр с победителем</b>\n";
 
-  data.dailyRoomCreated.forEach((row) => {
+  data.dailyGamesFinishedWithWinner.forEach((row) => {
     result += `${row.date}: ${row.cnt}\n`;
   });
 
