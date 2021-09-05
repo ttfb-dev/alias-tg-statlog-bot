@@ -19,6 +19,10 @@ const clickhouse = new ClickHouse({
   },
 });
 
+const date = new Date();
+date.setDate(date.getDate() - 2);
+const dateString = date.toISOString().slice(0, 10);
+
 const dailyGamesStartQuery = `
   SELECT 
     toDate(created_at) as date, 
@@ -63,9 +67,9 @@ const dailyRoomJoinedQuery = `
   FROM analytics
   WHERE 
     event = 'room.join'
+    AND date >= '${dateString}'
   GROUP BY date, method
-  ORDER BY date DESC 
-  LIMIT 21
+  ORDER BY date DESC
 `;
 
 const dailyRoomCreatedQuery = `
