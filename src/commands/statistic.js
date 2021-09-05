@@ -19,69 +19,81 @@ const clickhouse = new ClickHouse({
   },
 });
 
-const date = new Date();
-date.setDate(date.getDate() - 2);
-const dateString = date.toISOString().slice(0, 10);
+const getQueries = () => {
+  const date = new Date();
+  date.setDate(date.getDate() - 6);
+  const dateString = date.toISOString().slice(0, 10);
 
-const dailyGamesStartQuery = `
-  SELECT 
-    toDate(created_at) as date, 
-    count(*) as cnt 
-  FROM analytics
-  WHERE event = 'game.start' 
-  GROUP BY date 
-  ORDER BY date DESC 
-  LIMIT 7
-`;
+  const dailyGamesStartQuery = `
+    SELECT 
+      toDate(created_at) as date, 
+      count(*) as cnt 
+    FROM analytics
+    WHERE 
+      event = 'game.start'
+      AND date >= '${dateString}'
+    GROUP BY date 
+    ORDER BY date DESC
+  `;
 
-const dailyGamesFinishedWithWinnerQuery = `
-  SELECT 
-    toDate(created_at) as date, 
-    count(*) as cnt
-  FROM analytics
-  WHERE 
-    event = 'game.finish'
-    AND JSONExtractString(payload, 'reason') = 'has_winner'
-  GROUP BY date 
-  ORDER BY date DESC 
-  LIMIT 7
-`;
+  const dailyGamesFinishedWithWinnerQuery = `
+    SELECT 
+      toDate(created_at) as date, 
+      count(*) as cnt
+    FROM analytics
+    WHERE 
+      event = 'game.finish'
+      AND JSONExtractString(payload, 'reason') = 'has_winner'
+      AND date >= '${dateString}'
+    GROUP BY date 
+    ORDER BY date DESC
+  `;
 
-const dailyOnboardingFinishedQuery = `
-  SELECT 
-    toDate(created_at) as date, 
-    count(*) as cnt
-  FROM analytics
-  WHERE 
-    event = 'profile.finish_onboarding'
-  GROUP BY date 
-  ORDER BY date DESC 
-  LIMIT 7
-`;
+  const dailyOnboardingFinishedQuery = `
+    SELECT 
+      toDate(created_at) as date, 
+      count(*) as cnt
+    FROM analytics
+    WHERE 
+      event = 'profile.finish_onboarding'
+      AND date >= '${dateString}'
+    GROUP BY date 
+    ORDER BY date DESC
+  `;
 
-const dailyRoomJoinedQuery = `
-  SELECT 
-    toDate(created_at) as date,
-    JSONExtractString(payload, 'join_method') as method,
-    count(*) as cnt
-  FROM analytics
-  WHERE 
-    event = 'room.join'
-    AND date >= '${dateString}'
-  GROUP BY date, method
-  ORDER BY date DESC
-`;
+  const dailyRoomJoinedQuery = `
+    SELECT 
+      toDate(created_at) as date,
+      JSONExtractString(payload, 'join_method') as method,
+      count(*) as cnt
+    FROM analytics
+    WHERE 
+      event = 'room.join'
+      AND date >= '${dateString}'
+    GROUP BY date, method
+    ORDER BY date DESC
+  `;
 
-const dailyRoomCreatedQuery = `
-  SELECT 
-    toDate(created_at) as date, 
-    count(*) as cnt 
-  FROM analytics
-  WHERE event = 'room.create' 
-  GROUP BY date 
-  ORDER BY date DESC 
-  LIMIT 7
-`;
+  const dailyRoomCreatedQuery = `
+    SELECT 
+      toDate(created_at) as date, 
+      count(*) as cnt 
+    FROM analytics
+    WHERE 
+      event = 'room.create'
+      AND date >= '${dateString}'
+    GROUP BY date 
+    ORDER BY date DESC
+  `;
+
+  return {
+    dailyGamesStartQuery,
+    dailyGamesFinishedWithWinnerQuery,
+    dailyOnboardingFinishedQuery,
+    dailyRoomJoinedQuery,
+    dailyRoomCreatedQuery,
+  };
+};
 
 const statistic = {
   get: async () => {
@@ -90,6 +102,14 @@ const statistic = {
 };
 
 const select = async () => {
+  const {
+    dailyGamesStartQuery,
+    dailyGamesFinishedWithWinnerQuery,
+    dailyOnboardingFinishedQuery,
+    dailyRoomJoinedQuery,
+    dailyRoomCreatedQuery,
+  } = getQueries();
+
   try {
     const dailyGamesStart = await clickhouse
       .query(dailyGamesStartQuery)
