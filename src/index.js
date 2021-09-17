@@ -1,6 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
 
-import analytics from "./commands/statistic.js";
+import statistic from "./commands/statistic.js";
+import rr from "./commands/rr.js";
 
 // replace the value below with the Telegram token you receive from @BotFather
 // const token = process.env('TG_STATLOG_BOT_API');
@@ -38,7 +39,9 @@ const getResponse = async (message) => {
     case "/start":
       return `Hi!`;
     case "/statistic":
-      return await analytics.get();
+      return await statistic.get();
+    case "/rr":
+      return await rr.get();
     default:
       return `Unknown command: <code>${message}</code>`;
   }
