@@ -13,6 +13,7 @@ build_images:
     - export CLICKHOUSE_DB=$CI_PROD_CLICKHOUSE_DB
     - export CLICKHOUSE_USER=$CI_PROD_CLICKHOUSE_USER
     - export CLICKHOUSE_PASSWORD=$CI_PROD_CLICKHOUSE_PASSWORD
+    - export TG_STATLOG_BOT_API=$CI_PROD_TG_STATLOG_BOT_API
     - ./build/run-build
     - ./build/run
   tags:
